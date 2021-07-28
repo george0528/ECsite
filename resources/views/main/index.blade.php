@@ -1,0 +1,10 @@
+@extends('layouts.topLayout')
+@section('title', 'stickerbox')
+@section('content')
+@include('components.slide')
+@include('components.main.content.content_digest', ['title' => '新着商品', 'datas' => $news, 'link' => route('stockNews',['sort' => 0])])
+@include('components.main.content.content_digest', ['title' => 'ランキング', 'datas' => $rankings, 'link' => '/'])
+@include('components.main.content.content_digest', ['title' => 'タイムセール', 'datas' => $discounts, 'link' => route('stockDiscount', ['sort' => 4])])
+@include('components.main.content.category_digest', ['title' => 'カテゴリから探す', 'datas' => $categories])
+@include('components.main.content.check_digest')
+@endsection

@@ -1,0 +1,67 @@
+//　フッター
+.footer {
+    margin-top: 100px;
+    &_main {
+        border-top: 1px solid lighten(silver, 15%);
+        background-color: lighten(silver, 20%);
+        padding: 20px 0 0;
+        font-size: 0.95rem;
+        color: gray;
+        &_menu {
+            display: flex;
+            justify-content: center;
+            &_block {
+                margin: 0 50px;
+                &-title {
+                    font-weight: normal;
+                }
+                &_list {
+                    display: flex;
+                    flex-direction: column;
+                    margin-top: 10px;
+                    &-item {
+                        display: block;
+                        margin: 3px 0;
+                        color: gray;
+                        font-size: 0.85rem;
+                    }
+                }
+            }
+        }
+        &_sentence {
+            width: 70%;
+            margin: 30px auto;
+            &-content {
+                font-size: 0.8rem;
+                color: silver;
+            }
+        }
+        &_law {
+            width: auto;
+            &-p {
+                text-align: center;
+                font-size: 0.85rem;
+                &-a {
+                    font-size: 0.85rem;
+                    color: gray;
+                    padding: 0 10px;
+                    border-right: 1px solid gray;
+                    &:last-of-type {
+                        border-right: none;
+                    }
+                    &:hover {
+                        opacity: 1;
+                        text-decoration: underline;
+                    }
+                }
+            }
+        }
+        &_bottom {
+            margin-top: 30px;
+            &-p {
+                font-size: 0.8rem;
+                text-align: center;
+            }
+        }
+    }
+}

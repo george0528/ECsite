@@ -1,0 +1,1342 @@
+// 検索フォーム
+.search_container{
+  box-sizing: border-box;
+  position: relative;
+  border: 1px solid #999;
+  padding: 3px 10px;
+  border-radius: 20px;
+  height: 2.3em;
+  width: 260px;
+  overflow: hidden;
+}
+.search_container input[type="text"]{
+  border: none;
+  height: 2.0em;
+}
+.search_container input[type="text"]:focus {
+  outline: 0;
+}
+.search_container input[type="submit"]{
+  cursor: pointer;
+  font-family: FontAwesome;
+  font-size: 1.3em;
+  border: none;
+  background: none;
+  color: darkblue;
+  position: absolute;
+  width: 2.5em;
+  height: 2.5em;
+  right: 0;
+  top: -10px;
+  outline : none;
+}
+
+// 初期設定
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Noto Sans JP', sans-serif;
+}
+a {
+  text-decoration: none;
+  color: black;
+  &:hover {
+    opacity: 0.7;
+  }
+}
+img{
+	vertical-align:top;
+}
+
+// mixin 
+@mixin dot {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+@mixin list {
+  &_list {
+    display: flex;
+    flex-wrap: wrap;
+    &_product {
+      width: calc(20% - 10px);
+      margin-right: 10px;
+      margin-bottom: 20px;
+      p {
+        @include dot();
+        font-size: 0.9rem;
+      }
+      &-fee.discount {
+        color: lighten(red, 15%);
+        span {
+          font-size: 0.8rem;
+        }
+      }
+      &_img {
+        position: relative;
+        z-index: 10;
+        &::before {
+          content: '';
+          display: block;
+          padding-top: 100%;
+        }
+        &-img {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          display: inline-block;
+        }
+      }
+      &_icon {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        margin-bottom: 5px;
+        &-new {
+          margin-top: 3px;
+          display: inline-block;
+          margin-right: 5px;
+          color: darken(orange, 5%);
+          border: 1px solid orange;
+          padding: 1px 2px;
+          font-size: 0.6rem;
+          letter-spacing: 1px;
+          font-weight: bold;
+        }
+        &-discount {
+          margin-top: 3px;
+          display: inline-block;
+          color: white;
+          background-color: lighten(red, 15%);
+          border: 1px solid lighten(red, 15%);
+          padding: 1px;
+          font-size: 0.6rem;
+          letter-spacing: 1px;
+          font-weight: bold;
+        }
+      }
+    }
+  }
+}
+
+@mixin boN() {
+  border: 1px solid transparent;
+  outline: none;
+  border-bottom: 1px solid gray;
+}
+
+
+
+// HTML
+html {
+  width: 100vw;
+  font-size: 16px;
+}
+
+
+// body
+body {
+  width: 100%;
+  overflow-x: hidden;
+}
+
+// ヘッダー
+.header {
+  width: 100%;
+  background-color: #fff;
+  position: relative;
+  &_navbar {
+    border-bottom: 1px solid lighten(silver, 10%);
+    z-index: 100;
+    background-color: #fff;
+    // background-color: lighten($color: black, $amount: 20%);
+    position: fixed;
+    width: 100%;
+    top: 0;
+    left: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: auto;
+    padding: 0 6%;
+    &_left {
+      text-align: left;
+      &_logo {
+        &-img {
+          width: 200px;
+          height: 60px;
+          object-fit: cover;
+        }
+      }
+    }
+    &_right {
+      display: flex;
+      align-items: center;
+      padding: 10px 0;
+      &_user {
+        margin: 0 10px;
+        position: relative;
+        display: flex;
+        align-items: center;
+        &_menu {
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          padding: 10px;
+          color: gray;
+          &-icon {
+            width: 25px;
+            margin-right: 5px;
+          }
+          &_drop {
+            position: absolute;
+            background-color: #fff;
+            top: 100%;
+            left: -100px;
+            width: 250px;
+            padding: 10px 0;
+            z-index: 30;
+            border: 1px solid silver;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            a {
+              text-align: left;
+              padding: 5px 0 5px 20px;
+              width: 100%;
+              background-color: #fff;
+              &:hover {
+                background-color: silver;
+              }
+            }
+            &.open {
+              display: flex;
+            }
+            &-form {
+              display: none;
+            }
+          }
+        }
+      }
+      &_cart {
+        margin: 0 10px;
+        width: 30px;
+        display: flex;
+        align-items: center;
+        img {
+          width: 100%;
+        }
+      }
+      &_bars {
+        display: none;
+        cursor: pointer;
+        margin: 0 10px;
+        width: 24px;
+        height: 16px;
+        position: relative;
+        z-index: 150;
+        &.close {
+          // ハンバーガーメニュー
+          display: block;
+          // background-color: red;
+        }
+        &:hover {
+          opacity: 0.5;
+        }
+        &-bar {
+          display: inline-block;
+          width: 100%;
+          height: 2px;
+          background-color: black;
+          position: absolute;
+          left: 0;
+          transform: translateY(-50%);
+          &:first-of-type {
+            top: 0;
+          }
+          &:nth-of-type(2) {
+            top: 50%;
+          }
+          &:last-of-type {
+            bottom: -2px;
+          }
+        }
+      }
+    }
+  }
+}
+
+// その他
+// ヘッダースペース
+#header-space {
+  width: 100%;
+  height: 0;
+}
+// サイドメニューのカバー
+#side-cover {
+  display: none;
+  position: fixed;
+  z-index: 40;
+  width: 100%;
+  height: 100vh;
+  background-color: rgba(black, 0.8);
+  &.open {
+    display: block;
+  }
+}
+// 検索バー
+#top-search {
+  display: none;
+}
+
+// メイン
+.main {
+  width: 80%;
+  min-width: 900px;
+  margin: 0 auto;
+  display: flex;
+  // サイドメニュー
+  &_side {
+    width: 20%;
+    padding-right: 5%;
+    &_block {
+      margin-bottom: 50px;
+      &-title {
+        font-size: 1.1rem;
+        font-weight: normal;
+        padding: 5px 0;
+        border-bottom: 2px solid silver;
+      }
+      &_list {
+        overflow: hidden;
+        &-item {
+          display: block;
+          border-bottom: 1px solid silver;
+          @include dot();
+          padding: 5px 7.5px;
+          &.link {
+            color: red;
+            overflow: auto;
+            white-space: pre-wrap;
+            font-size: 0.9rem;
+          }
+          &:hover {
+            opacity: 1;
+            background-color: rgba(silver, 0.2);
+          }
+        }
+      }
+      &_filter {
+        padding: 10px 0;
+        &_checkbox {
+          display: flex;
+          align-items: center;
+          margin: 10px 0;
+          &-checkbox {
+            display: block;
+            transform: scale(1.5);
+            color: black;
+            margin: 0 10px;
+          }
+        }
+      }
+    }
+  }
+  // メインコンテンツ (サイドメニューあり)
+  &_contents {
+    width: 80%;
+    // Topのスライドショー
+    &_slide {
+      width: 80%;
+      height: 350px;
+      margin: 20px auto 0;
+      &-img {
+        width: 100%;
+      }
+    }
+    // ダイジェスト
+    &_digest {
+      margin-top: 50px;
+      &_titles {
+        border-bottom: 1px solid silver;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 25px;
+        &-title {
+          color: black;
+        }
+        &-link {
+          color: red;
+        }
+      }
+      // 商品一覧
+      @include list();
+    }
+    // カテゴリーダイジェスト
+    &_categorydigest {
+      margin-top: 50px;
+      &_titles {
+        border-bottom: 1px solid silver;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 25px;
+        &-title {
+          color: black;
+        }
+        &-link {
+          color: red;
+        }
+      }
+      // 商品一覧
+      @include list();
+      &_list {
+        justify-content: center;
+        &_product {
+          p {
+            text-align: center;
+            font-size: 1.3rem;
+            color: gray;
+            opacity: 0.9;
+          }
+          &_img {
+            border-radius: 50%;
+            overflow: hidden;
+          }
+        }
+      }
+    }
+    // 一覧表示ページ
+    &_stock {
+      &_titles {
+        margin: 15px 0;
+        &-title {
+          font-weight: normal;
+          font-size: 1.2rem;
+          padding: 5px 0;
+        }
+        &-count {
+          font-size: 0.9rem;
+        }
+      }
+      &_nav {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 20px;
+        &_sort {
+          &-label {
+            font-size: 0.8rem;
+            display: inline-block;
+            margin-right: 10px;
+          }
+        }
+        &_links {
+          display: none;
+        }
+      }
+      // 商品一覧
+      @include list();
+    }
+  }
+  // ノーサイドコンテンツ
+  @mixin NStitle {
+    margin: 30px 0;
+    padding: 10px 0;
+    border-bottom: 1px solid silver;
+  }
+  &_NScontents {
+    width: 100%;
+    margin: 0 auto;
+    // 商品詳細
+    &_stockDetail {
+      width: 100%;
+      &_top {
+        width: 100%;
+        display: flex;
+        &_imgs {
+          width: 40%;
+          margin-right: 5%;
+          &_main {
+            width: 100%;
+            &-img {
+              width: 100%;
+            }
+          }
+          &_bottoms {
+            width: 100%;
+            &_img {
+              flex-wrap: wrap;
+              width: 100%;
+              display: flex;
+              &-img {
+                cursor: pointer;
+                display: block;
+                margin: 10px 5px;
+                object-fit: cover;
+                width: 100px;
+                height: 100px;
+                &.select {
+                  outline: 3px solid gray;
+                }
+              }
+            }
+          }
+        }
+        &_contents {
+          width: 55%;
+          &-name {
+            margin-top: 10px;
+            font-size: 2.2rem;
+          }
+          &_discount {
+            margin: 10px 0;
+            &-p {
+              color: gray;
+              font-size: 0.7rem;
+            }
+            &-percent {
+              padding: 1px 5px;
+              color: white;
+              display: inline-block;
+              font-size: 0.8rem;
+              background-color: red;
+              margin: 5px 0;
+            }
+            &-Bprice {
+              font-size: 0.9rem;
+              span {
+                text-decoration: line-through;
+              }
+            }
+          }
+          &-price {
+            font-weight: bold;
+            font-size: 1.8rem;
+            &.discount {
+              color: red;
+            }
+          }
+          &-detail {
+            border-bottom: 1px solid silver;
+            color: gray;
+            padding: 20px 0;
+          }
+          &_form {
+            &_quantity {
+              margin: 10px 0;
+              &-p {
+                font-weight: bold;
+              }
+              &_select {
+                width: 200px;
+                margin: 10px 5px;
+                @include boN();
+                padding: 10px 0;
+                font-size: 1.1rem;
+                &:active {
+                  @include boN();
+                }
+                &:focus {
+                  @include boN();
+                }
+              }
+            }
+            &-btn {
+              cursor: pointer;
+              width: 70%;
+              padding: 20px 0;
+              border: none;
+              background-color: black;
+              color: white;
+              font-size: 1.1rem;
+              font-weight: bold;
+            }
+          }
+        }
+      }
+    }
+    // カート
+    &_mycart {
+      margin-top: 30px;
+      &-title {
+        @include NStitle();
+      }
+      &_contents {
+        margin-top: 30px;
+        display: flex;
+        justify-content: space-between;
+        &_left {
+          padding: 20px;
+          align-self: flex-start;
+          border: 1px solid silver;
+          &_none {
+            padding: 10px 300px 0px 10px;
+          }
+          &_item {
+            display: flex;
+            padding: 20px;
+            font-size: 0.8rem;
+            border-bottom: 1px solid silver;
+            &:last-of-type {
+              border-bottom: none;
+            }
+            &_img {
+              display: block;
+              &-img {
+                width: 150px;
+                height: 150px;
+                object-fit: cover;
+              }
+            }
+            &_main {
+              margin: 0 20px;
+              &-name {
+                display: block;
+                font-size: 1.1rem;
+                font-weight: bold;
+                margin-bottom: 10px;
+              }
+              &-category {
+                color: gray;
+                margin: 5px 0;
+              }
+              &-price {
+                color:gray;
+                margin: 5px 0;
+                &.discount {
+                  color: lighten(red, 15%);
+                }
+                .discount_percent {
+                  font-size: 0.8rem;
+                }
+              }
+              &-delete {
+                display: block;
+                margin-top: 30px;
+                font-size: 1.1rem;
+                font-weight: bold;
+                border: none;
+                background-color: white;
+                cursor: pointer;
+                &:hover {
+                  opacity: 1;
+                  text-decoration: underline;
+                }
+              }
+            }
+            &_num {
+              margin-left: auto;
+              &_quantity {
+                &-p {
+                  font-weight: bold;
+                }
+                &_select {
+                  padding: 10px 0;
+                  width: 150px;
+                  @include boN();
+                  background-color: white;
+                  &:active {
+                    @include boN();
+                  }
+                  &:focus {
+                    @include boN();
+                  }
+                }
+                &-sum {
+                  font-weight: bold;
+                  margin-top: 10px;
+                  font-size: 1.1rem;
+                }
+              }
+            }
+          }
+          &_none {
+            &-p {
+              color: gray;
+              font-size: 0.85em;
+            }
+            &-backbtn {
+              border: 1px solid black;
+              background-color: black;
+              color: white;
+              text-align: center;
+              margin: 15px 0;
+              padding: 10px;
+              display: inline-block;
+            }
+          }
+        }
+        &_right {
+          width: 250px;
+          margin-left: 30px;
+          &_block {
+            &_titles {
+              font-weight: bold;
+              display: flex;
+              justify-content: space-between;
+            }
+            &_contents {
+              padding: 10px 0;
+              margin: 10px 0;
+              border-top: 1px solid silver;
+              border-bottom: 1px solid silver;
+              color: gray;
+              font-size: 0.9rem;
+              &_content {
+                display: flex;
+                justify-content: space-between;
+                margin: 10px 0;
+              }
+            }
+          }
+          &_btns {
+            margin-top: 30px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            form {
+              button {
+                width: 100%;
+              }
+            }
+            &-backbtn {
+              display: block;
+              text-align: center;
+              padding: 10px;
+              border: 1px solid black;
+              background-color: white;
+              color: black;
+              margin: 10px 0;
+            }
+          }
+        }
+      }
+    }
+    // マイページ
+    &_mypage {
+      &-title {
+        @include NStitle();
+      }
+      &_list {
+        border: 1px solid silver;
+        padding: 10px 20px;
+        margin: 20px;
+        &_content {
+          border-bottom: 1px solid silver;
+          margin-top: 10px;
+          &:last-of-type {
+            border: none;
+          }
+          &_top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            &-title {
+              font-weight: bold;
+            }
+            &-a {
+              border: 1px solid gray;
+              padding: 5px;
+              font-size: 0.7rem;
+              font-weight: bold;
+            }
+          }
+          &_box {
+            margin: 10px 0;
+            font-size: 0.9rem;
+            &-title {
+              font-weight: bold;
+            }
+            &-content {
+              color: gray;
+            }
+          }
+        }
+      }
+    }
+    // マイページ変更フォーム
+    &_mypageForm {
+      &_form {
+        border: 1px solid silver;
+        margin: 10px;
+        padding: 20px;
+        font-size: 0.9rem;
+        label {
+          font-weight: bold;
+        }
+        input {
+          @include boN();
+          padding: 10px 5px;
+          margin: 5px;
+          margin-bottom: 30px;
+          &:focus {
+            border: 1px solid skyblue;
+          }
+        }
+        &_btns {
+          display: flex;
+          margin-top: 20px;
+          button {
+            cursor: pointer;
+            padding: 10px;
+            color: white;
+            border: 1px solid black;
+            background-color: black;
+          }
+          &-cancel {
+            cursor: pointer;
+            display: block;
+            border: 1px solid black;
+            color: black;
+            background-color: #fff;
+            padding: 10px;
+            margin-left: 20px;
+          }
+        }
+      }
+    }
+    // 注文履歴
+    &_order {
+      &-title {
+        @include NStitle();
+      }
+      &_items {
+        margin-top: 20px;
+        border: 1px solid silver;
+        padding: 20px;
+        &_item {
+          margin: 10px 0;
+          display: flex;
+          border-bottom: 1px solid silver;
+          padding-bottom: 20px;
+          &:last-of-type {
+            border: none;
+          }
+          &_left {
+            &-img {
+              width: 200px;
+              height: 200px;
+              object-fit: cover;
+            }
+          }
+          &_right {
+            margin-left: 5%;
+            p {
+              margin: 10px 0;
+            }
+          }
+        }
+      }
+    }
+    // ログイン & 新規会員登録
+    &_login, &_register {
+      width: 100%;
+      &-title {
+        @include NStitle();
+      }
+      &_box {
+        margin-top: 20px;
+        padding: 20px;
+        border: 1px solid silver;
+        &_form {
+          &-input {
+            @include boN();
+            padding: 15px;
+            font-size: 1.1rem;
+            background-color: lighten(silver, 20%);
+            margin: 10px 0 20px;
+            letter-spacing: 0.5px;
+            width: 800px;
+            &:focus {
+              background-color: #fff;
+              outline: 1.5px solid silver;
+            }
+            &::placeholder {
+              font-size: 0.9rem;
+            }
+          }
+          &-icon {
+            background-color: red;
+            padding: 2px 5px;
+            margin-left: 10px;
+            font-size: 0.8rem;
+            color: white;
+          }
+          &_show {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            &-checkbox {
+              transform: scale(1.5);
+              display: flex;
+              cursor: pointer;
+            }
+            &-label {
+              display: block;
+              cursor: pointer;
+              padding-left: 10px;
+            }
+          }
+          &-btn {
+            cursor: pointer;
+            border: 1px solid black;
+            background-color: black;
+            color: white;
+            text-align: center;
+            margin: 15px 0;
+            padding: 10px 30px;
+            display: inline-block;
+            &:hover {
+              opacity: 0.7;
+            }
+            &:focus {
+              border-radius: 1px;
+              box-shadow: 0 0 0 3px gray;
+            }
+          }
+        }
+      }
+    }
+    // 規約系
+    &_law {
+      font-size: 0.85rem;
+      &-title {
+        @include NStitle();
+      }
+      &_content {
+        &-title {
+          margin-top: 50px;
+        }
+        &-p {
+          margin-top: 10px;
+          &-a {
+            font-size: 0.85rem;
+            color: blue;
+            text-decoration: underline;
+            &:hover {
+              opacity: 1;
+            }
+        }
+        }
+      }
+      &_Bcontent {
+        &_box {
+          border-bottom: 1px solid silver;
+          padding: 10px 0;
+          margin: 10px 0;
+          &:last-of-type {
+            border: none;
+          }
+          &-p {
+            padding: 5px 0;
+          }
+        }
+      }
+    }
+    // 購入後画面
+    &_checkoutafter {
+      &-title {
+        @include NStitle();
+      }
+      &_box {
+        text-align: center;
+        &-title {
+          padding: 10px 0;
+        }
+        &_list {
+          border: 1px solid silver;
+          &-p {
+            margin: 10px 0;
+          }
+          &_product {
+            display: flex;
+            justify-content: center;
+            margin: 20px;
+            &_left {
+              &-img {
+                width: 100px;
+                height: 100px;
+                object-fit: cover;
+              }
+            }
+            &_right {
+              margin-left: 30px;
+              &-p {
+                text-align: left;
+                padding: 10px 0;
+              }
+            }
+          }
+          &-sum {
+            margin: 10px 0;
+            font-weight: bold;
+            font-size: 1.1rem;
+          }
+          &-a {
+            width: 300px;
+            text-align: center;
+            margin: 20px auto;
+            padding: 10px;
+            background-color: black;
+            color: white;
+          }
+        }
+      }
+    }
+  }
+}
+
+
+
+
+
+// コンポーネント
+.component {
+  &_links {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    &_btns {
+      display: flex;
+      &-btn {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 30px;
+        height: 30px;
+        border: 1px solid silver;
+        margin: 0 5px;
+        &.current {
+          color: white;
+          background-color: black;
+          border: 1px solid black;
+        }
+        &.btn-black {
+          font-weight: bold;
+          color: white;
+          background-color: black;
+          border: 1px solid black;
+          margin: 0 1px;
+        }
+      }
+    }
+  }
+  &_alert {
+    padding: 15px;
+    margin: 20px 0;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    &.success {
+      background-color: #dff0d8;
+      border-color: #d6e9c6;
+      color: #3c763d;
+    }
+    &.danger {
+      background-color: #f2dede;
+      border-color: #ebccd1;
+      color: #a94442;
+    }
+    &-a {
+      text-decoration: underline;
+      font-size: 0.8rem;
+    }
+  }
+}
+
+
+
+
+
+
+// レスポンシブ
+// パソコン～タブレット
+@media (max-width: 1024px) {
+  html {
+    font-size: 14.5px;
+  }
+  .main {
+    width: 95%;
+    margin: 0 auto;
+    min-width: initial;
+    &_side {
+      width: 25%;
+    }
+    &_contents {
+      width: 75%;
+    }
+    // ノーサイドコンテンツ
+    &_NScontents {
+      width: 100%;
+      margin: 0 auto;
+      &_stockDetail {
+        &_top {
+          &_imgs {
+            &_main {
+              width: 100%;
+            }
+            &_bottoms {
+              &_img {
+                &-img {
+                  width: 85px;
+                  height: 85px;
+                }
+              }
+            }
+          }
+        }
+      }
+      &_login, &_register {
+        &_box {
+          &_form {
+            &-input {
+              width: 80%;
+            }
+          }
+        }
+      }
+      &_order {
+        &_items {
+          &_item {
+            &_left {
+              &-img {
+                width: 150px;
+                height: 150px;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+
+
+// タブレット～スマホ
+@media (max-width: 768px) {
+  html {
+    font-size: 13px;
+  }
+  // その他
+  .header {
+    &_navbar {
+      padding: 0;
+      &_left {
+        &_logo {
+          &-img {
+            // width: 125px;
+            // height: 80px;
+            object-fit: cover;
+          }
+        }
+      }
+      &_right {
+        &_search {
+          display: none;
+        }
+        &_user {
+          &_menu {
+            &_drop {
+              width: 200px;
+            }
+          }
+        }
+        &_bars {
+          display: block;
+        }
+      }
+    }
+  }
+  .main {
+    width: 98%;
+    &_side {
+      position: fixed;
+      top: 0;
+      left: -100%;
+      background-color: #fff;
+      z-index: 50;
+      padding: 0;
+      min-height: 100vh;
+      min-width: 200px;
+      &.open {
+        left: 0;
+      }
+    }
+    // コンテンツ
+    &_contents {
+      width: 100%;
+      margin: 0 auto;
+      &_digest {
+        &_titles {
+          margin-bottom: 15px;
+        }
+        &_list {
+          flex-wrap: nowrap;
+          overflow: hidden;
+          &_product {
+            width: calc(calc(100% / 3) - 10px);
+            &:nth-of-type(4) {
+              display: none;
+            }
+            &:nth-of-type(5) {
+              display: none;
+            }
+          }
+        }
+      }
+      &_stock {
+        &_list {
+          &_product {
+            width: calc(calc(100% / 3) - 10px);
+            &:nth-of-type(3n) {
+              width: calc(100% / 3);
+              margin-right: 0;
+            }
+          }
+        }
+      }
+    }
+    // ノーサイドコンテンツ
+    &_NScontents {
+      width: 100%;
+      &_stockDetail {
+        &_top {
+          &_imgs {
+            &_main {
+              width: 100%;
+            }
+            &_bottoms {
+              &_img {
+                &-img {
+                  width: 75px;
+                  height: 75px;
+                }
+              }
+            }
+          }
+        }
+      }
+      &_mycart {
+        &_contents {
+          flex-direction: column;
+          justify-content: normal;
+          &_left {
+            width: 100%;
+            border: none;
+            box-shadow: 0 0 3px 1px silver;
+          }
+          &_right {
+            width: 100%;
+            padding: 20px;
+            margin: 0;
+            margin-top: 30px;
+            box-shadow: 0 0 3px 1px silver;
+          }
+        }
+      }
+      &_order {
+        &_items {
+          &_item {
+            &_left {
+              &-img {
+                width: 100px;
+                height: 100px;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+// スマホ
+@media (max-width: 600px) {
+  html {
+    font-size: 10px;
+  }
+  .header {
+    &_navbar {
+      &_left {
+        &_logo {
+          &-img {
+            width: 150px;
+            height: 30px;
+            object-fit: cover;
+          }
+        }
+      }
+      &_right {
+        &_user {
+          &_menu {
+            padding: 0;
+            &-name {
+              display: none;
+            }
+          }
+        }
+        &_cart {
+          width: 25px;
+        }
+      }
+    }
+  }
+  .main {
+    // コンテンツ
+    &_contents {
+      &_slide {
+        width: 100%;
+      }
+      &_stock {
+        &_nav {
+          &_sort {
+            &_select {
+              option {
+                display: block;
+              }
+            }
+          }
+        }
+      }
+    }
+    // ノーサイドコンテンツ
+    &_NScontents {
+      &_stockDetail {
+        &_top {
+          &_imgs {
+            &_main {
+              width: 100%;
+            }
+            &_bottoms {
+              &_img {
+                &-img {
+                  width: 50px;
+                  height: 50px;
+                }
+              }
+            }
+          }
+          &_contents {
+            &_form {
+              &_quantity {
+                &_select {
+                  width: 80%;
+                }
+              }
+              &-btn {
+                min-width: 150px;
+                padding: 10px 0;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
