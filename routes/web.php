@@ -5,6 +5,9 @@ use App\Http\Controllers\AjaxController;
 use App\Http\Controllers\PaymentController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ShopController;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cookie;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
