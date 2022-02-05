@@ -146,7 +146,10 @@ return [
     */
 
     'attributes' => [
-        'keyword' => '文字'
+        'keyword' => '文字',
+        'name' => '名前',
+        'email' => 'メールアドレス',
+        'password' => 'パスワード',
     ],
 
 ];

@@ -10,13 +10,7 @@ use App\Models\Order;
 use App\Models\Photo;
 use App\Models\Tag;
 use App\Models\Tagmap;
-use Facade\FlareClient\Stacktrace\File;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Cookie;
-use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Facades\Storage;
-use Stripe\Issuing\Dispute;
-use Svg\Tag\Rect;
+
 
 class AdminController extends Controller
 {
