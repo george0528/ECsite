@@ -16,4 +16,5 @@
     <link rel="stylesheet" href="{{ asset('css/footer.css') }}">
     {{-- Title --}}
     <title>@yield('title')</title>
+    <meta name="apple-mobile-web-app-capable" content="yes" />
 </head>
